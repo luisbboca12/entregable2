@@ -61,6 +61,41 @@ class Contenedor {
       );
     }
   }
+  async update(id, updatedData) {
+    try {
+      const data = await this.getData();
+      const parsedData = JSON.parse(data);
+
+      const existingObjectIndex = parsedData.findIndex(
+        (producto) => producto.id === id
+      );
+
+      if (existingObjectIndex !== -1) {
+        parsedData[existingObjectIndex] = {
+          ...parsedData[existingObjectIndex],
+          ...updatedData,
+        };
+
+        await fs.promises.writeFile(
+          this._filename,
+          JSON.stringify(parsedData)
+        );
+
+        console.log(`Object with ID ${id} updated successfully.`);
+      } else {
+        console.log(`ID ${id} does not exist in the file`);
+      }
+    } catch (error) {
+      console.log(
+        `Error Code: ${error.code} | There was an error when trying to update an element by its ID (${id})`
+      );
+    }
+  }
+  
+
+
+
+
 
   async save(object) {
     try {
